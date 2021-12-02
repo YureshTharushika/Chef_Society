@@ -89,9 +89,9 @@ final _registerFormKey = GlobalKey<FormState>();
                 error,
                 style: const TextStyle(color: Colors.red),
               ),
-              Text(
+              const Text(
                 'Already have an account?',
-                style: const TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black),
               ),
               const SizedBox(height: 12,),
               ElevatedButton(
