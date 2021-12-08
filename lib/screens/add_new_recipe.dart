@@ -243,7 +243,7 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
                 onPressed: () async{
                   if(_recipeFormKey.currentState!.validate()){
                     //call function here
-                    await DatabaseService().addNewRecipe(title, category , ingredients , directions, user.uid, user.displayName!);
+                    await DatabaseService().addNewRecipe(title, category , ingredients , directions, user.uid, user.displayName!,user.photoURL!);
                     titleController.clear();
                     ingredientsController.clear();
                     directionsController.clear();

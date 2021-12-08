@@ -1,6 +1,10 @@
+import 'package:chefsociety/models/recipe.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
+import 'package:chefsociety/services/database.dart';
 import 'package:chefsociety/services/google_sign_in.dart';
 import 'package:chefsociety/shared/shared_widgets.dart';
+import 'package:chefsociety/widgets/recipe_list.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +22,12 @@ class LoggedInPage extends StatelessWidget {
 
     return BackgroundImageWidget(
       image: NetworkImage(urlImage),
-      child: 
-        Scaffold(
+      child: StreamProvider<List<Recipe>>.value(
+        initialData: [],
+
+        value: DatabaseService().recipes,
+
+        child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Home'),
@@ -36,7 +44,7 @@ class LoggedInPage extends StatelessWidget {
                 ),
             ],
           ),
-          body: const Center(child: Text('Hi This an example text'),),
+          body: RecipeList(),
 
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
@@ -49,6 +57,8 @@ class LoggedInPage extends StatelessWidget {
                                                     ),
           
         ),
+      ),
+        
       
     );
   }
