@@ -10,6 +10,7 @@ class Recipe {
  final String userid;
  final String displayname;
  final String photourl;
+ final String recipepicurl;
 
     Recipe({
       required this.title,
@@ -18,6 +19,8 @@ class Recipe {
       required this.directions,
       required this.userid,
       required this.displayname,
-      required this.photourl
+      required this.photourl,
+      required this.recipepicurl
     });
 }
+

@@ -2,8 +2,11 @@
 
 
 
+import 'dart:io';
+
 import 'package:chefsociety/models/recipe.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService{
 
@@ -15,7 +18,7 @@ class DatabaseService{
 final CollectionReference recipeCollection = FirebaseFirestore.instance.collection('recipes');
 
 
-Future addNewRecipe(String title, String category ,String ingredients , String directions , String userid, String displayname, String photourl) async{
+Future addNewRecipe(String title, String category ,String ingredients , String directions , String userid, String displayname, String photourl, String recipepicurl) async{
 
   try {
     return await recipeCollection.doc().set({
@@ -26,6 +29,7 @@ Future addNewRecipe(String title, String category ,String ingredients , String d
       'userid': userid,
       'displayname': displayname,
       'photourl': photourl,
+      'recipepicurl': recipepicurl,
     });
   } on Exception catch (e) {
     print(e.toString());
@@ -48,7 +52,8 @@ List<Recipe> _recipeListFromSnapshot(QuerySnapshot snapshot){
               directions: doc.get('directions') ?? '',
               userid: doc.get('userid') ?? '',
               displayname: doc.get('displayname') ?? '',
-              photourl: doc.get('photourl') ?? ''
+              photourl: doc.get('photourl') ?? '',
+              recipepicurl: doc.get('recipepicurl') ?? ''
             );
     }).toList();
 
@@ -61,4 +66,20 @@ Stream<List<Recipe>> get recipes {
   return recipeCollection.snapshots().map(_recipeListFromSnapshot);
 }
 
+}
+
+
+class FirebaseApi{
+
+  static UploadTask? uploadFile(String destination , File file){
+
+    try {
+      final reference = FirebaseStorage.instance.ref(destination);
+      
+      return reference.putFile(file);
+    } on FirebaseException catch (e) {
+      return null;
+    }
+
+  }
 }

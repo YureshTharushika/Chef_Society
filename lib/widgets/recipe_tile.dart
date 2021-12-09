@@ -14,22 +14,102 @@ class RecipeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Card(
-        margin: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 0.0),
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.cyan,
-            backgroundImage: NetworkImage(recipe.photourl),
+    return Stack(
+      
+      children: [
+        Container(
+          
+          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.4),
+                spreadRadius: 2,
+                blurRadius: 15,
+                offset: const Offset(0,1),
+              ),
+            ],
+            image: DecorationImage(image: NetworkImage(recipe.recipepicurl),fit: BoxFit.cover),
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+
+        Container(
+
+          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.black.withOpacity(0.25),
+          ),
+        ),
+
+        Container(
+
+          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
             
           ),
-          title: Text(recipe.title),
-          subtitle: Text('By ${recipe.displayname}'),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 25, 5, 85),
+            child: Container(
+              
+              
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color:  Colors.white.withOpacity(0.5)
+              ),
+
+                  child: ListTile(
+              
+                leading: CircleAvatar(
+                
+                radius: 28,
+                backgroundColor: Colors.cyan,
+                backgroundImage: NetworkImage(recipe.photourl),
+                                  ),
+                title: Text(recipe.title,
+                            style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 16,),
+                            ),
+                subtitle: Text('By ${recipe.displayname}',
+                            style: const TextStyle(color: Colors.black,fontWeight: FontWeight.w500,),
+                            ),
+              ),
+            ),
+            ),
         ),
-      ),
-      
+      ],
     );
   }
 } 
+
+
+
+
+// Below Code is Not Relavent
+
+
+// Padding(
+//       padding: const EdgeInsets.only(top: 8),
+//       child: Card(
+        
+//         margin: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 0.0),
+//         child: ListTile(
+//           leading: CircleAvatar(
+//             radius: 25,
+//             backgroundColor: Colors.cyan,
+//             backgroundImage: NetworkImage(recipe.photourl),
+            
+//           ),
+//           title: Text(recipe.title),
+//           subtitle: Text('By ${recipe.displayname}'),
+//         ),
+//       ),
+      
+//     );

@@ -2,10 +2,15 @@
 
 
 
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 import 'package:chefsociety/services/database.dart';
 import 'package:chefsociety/shared/shared_widgets.dart';
+import 'package:chefsociety/widgets/image_pick_and_confirm_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddNewRecipe extends StatefulWidget {
   const AddNewRecipe({ Key? key }) : super(key: key);
@@ -28,6 +33,7 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
   String category = '';
   String ingredients = '';
   String directions = '';
+  String recipePhotoUrl = '';
 
   var myInitialItem = 'Any';
   final items = [ 'Any',
@@ -55,9 +61,65 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
 
   }
 
+  UploadTask? task;
+  File? imagefile;
+
+  Future pickImage() async{
+
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if(image == null) return;
+      
+      final imageTemporary = File(image.path);
+       setState(()=>imagefile = imageTemporary);
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+
+  }
+
+  Future uploadImage() async{
+    if(imagefile==null) return;
+
+    final imageName = basename(imagefile!.path);
+    final destination = 'RecipeImages/$imageName';
+
+    task = FirebaseApi.uploadFile(destination , imagefile!);
+    setState(() {});
+
+    if(task == null) return;
+
+    final snapshot = await task!.whenComplete((){});
+    final recipePicURL = await snapshot.ref.getDownloadURL();
+
+    recipePhotoUrl = recipePicURL;
+
+  }
+
+  Widget uploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
+    stream: task.snapshotEvents,
+    builder: (context, snapshot){
+              if(snapshot.hasData){
+                  final snap = snapshot.data!;
+                  final progress = snap.bytesTransferred/snap.totalBytes;
+                  final persentage = (progress*100).toStringAsFixed(2);
+
+                  return Text(
+                    '$persentage %',
+                    style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w600,),
+                  );
+              }else{
+                return Container();
+              }
+    },
+    );
+
 
   @override
   Widget build(BuildContext context) {
+
+    final imageSelection = imagefile !=null? 'Photo Selected' : 'No Photo Selected';
+
     return BackgroundImageWidget(
       image: NetworkImage(urlImage), 
       child: Scaffold(
@@ -71,10 +133,42 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           reverse: true,
+
+          
         child:  Form(
           key: _recipeFormKey,
           child: Column(
             children: <Widget>[
+
+
+              const SizedBox(height: 5,),
+
+              imagefile !=null? ClipRRect(
+                child: Image.file(imagefile!,fit: BoxFit.cover,
+                ),
+              ): const Image(image: NetworkImage('https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80'),
+              ),
+
+              const SizedBox(height: 10,),
+
+              ImagePickAndConfirmButton(
+                title: 'Pick a Photo',
+                icon:Icons.image_outlined ,
+                onClicked:()=> pickImage(),
+              ),
+              Text(
+                imageSelection,
+                style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500),
+                ),
+              const SizedBox(height: 10,),
+
+              ImagePickAndConfirmButton(
+                title: 'Confirm',
+                icon:Icons.done ,
+                onClicked:()=> uploadImage(),
+              ),
+              task != null? uploadStatus(task!): Container(),
+
 
               const SizedBox(height: 10,),
               
@@ -241,14 +335,20 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
                           ),
                 
                 onPressed: () async{
-                  if(_recipeFormKey.currentState!.validate()){
+                  if(imagefile !=null){
+                    
+                    if(_recipeFormKey.currentState!.validate()){
                     //call function here
-                    await DatabaseService().addNewRecipe(title, category , ingredients , directions, user.uid, user.displayName!,user.photoURL!);
+                    await DatabaseService().addNewRecipe(title, category , ingredients , directions, user.uid, user.displayName!,user.photoURL!,recipePhotoUrl);
                     titleController.clear();
                     ingredientsController.clear();
                     directionsController.clear();
                   }else{
                   const Center(child: Text('Something went wrong!'));
+                  }
+
+                  }else{
+                    const Center(child: Text('Please select and confirm a photo!'));
                   }
                   
                 },
@@ -266,4 +366,7 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
     ),
     );
   }
+
+    
+  
 }

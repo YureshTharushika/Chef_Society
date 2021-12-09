@@ -19,6 +19,7 @@ class _RecipeListState extends State<RecipeList> {
     final recipes = Provider.of<List<Recipe>>(context);
 
     return ListView.builder(
+      padding:const EdgeInsets.all(10),
       
       itemCount: recipes.length,
       itemBuilder: (context, index){
