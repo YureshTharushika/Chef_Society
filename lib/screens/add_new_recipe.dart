@@ -208,38 +208,14 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
               // Title Form Field Ends
 
               const SizedBox(height: 10,),
+
               const Text('Choose Category:',
               style: TextStyle(fontWeight: FontWeight.w400,fontSize: 18,),
               ),
               const SizedBox(height: 5,),
 
               // Category Dropdown Menu
-              Container(
-                // margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade600 , width: 1),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child:  DropdownButton<String>(
-                  value: myInitialItem,
-                  iconSize: 36,
-                  icon: Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.grey.shade800,),
-                  isExpanded: true,
-                  onChanged: (value){
-                    myInitialItem = value!;
-                    setState(() => category = value);
-
-                  },
-                  
-                  items: items.map((items) {
-                    return DropdownMenuItem(value: items, child: Text(items));
-                  }).toList(),
-                  ),
-                  ), 
-              ),
+              buildDropDownMenu(),
 
 
                 // Category Dropdown Menu Ends
@@ -324,7 +300,55 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
 
               // Submit Button
 
-               ElevatedButton(
+               buildSubmitButton(),
+              
+              // Submit Button Ends
+              const SizedBox(height: 10,),
+              
+            ],
+            
+          ),
+          ),
+        ),
+      ),
+    ),
+    );
+  }
+
+
+
+Widget buildDropDownMenu(){
+  return Container(
+                // margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade600 , width: 1),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child:  DropdownButton<String>(
+                  value: myInitialItem,
+                  iconSize: 36,
+                  icon: Icon(Icons.arrow_drop_down_circle_outlined, color: Colors.grey.shade800,),
+                  isExpanded: true,
+                  onChanged: (value){
+                    myInitialItem = value!;
+                    setState(() => category = value);
+
+                  },
+                  
+                  items: items.map((items) {
+                    return DropdownMenuItem(value: items, child: Text(items));
+                  }).toList(),
+                  ),
+                  ), 
+              );
+}
+
+Widget buildSubmitButton(){
+
+  return ElevatedButton(
 
                  style: ElevatedButton.styleFrom(shape: const StadiumBorder(),
                  minimumSize: const Size.fromHeight(40),
@@ -352,21 +376,7 @@ class _AddNewRecipeState extends State<AddNewRecipe> {
                   }
                   
                 },
-              ),
-              
-              // Submit Button Ends
-              const SizedBox(height: 10,),
-              
-            ],
-            
-          ),
-          ),
-        ),
-      ),
-    ),
-    );
-  }
-
-    
+              );
+}
   
 }

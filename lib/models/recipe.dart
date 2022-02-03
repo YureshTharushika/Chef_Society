@@ -11,6 +11,7 @@ class Recipe {
  final String displayname;
  final String photourl;
  final String recipepicurl;
+ final String documentid;
 
     Recipe({
       required this.title,
@@ -20,7 +21,8 @@ class Recipe {
       required this.userid,
       required this.displayname,
       required this.photourl,
-      required this.recipepicurl
+      required this.recipepicurl,
+      required this.documentid
     });
 }
 

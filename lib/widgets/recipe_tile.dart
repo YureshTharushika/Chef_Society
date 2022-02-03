@@ -1,4 +1,5 @@
 import 'package:chefsociety/models/recipe.dart';
+import 'package:chefsociety/screens/recipe_more_details.dart';
 import 'package:flutter/material.dart';
 
 class RecipeTile extends StatelessWidget {
@@ -20,8 +21,9 @@ class RecipeTile extends StatelessWidget {
         Container(
           
           margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          padding:const EdgeInsets.all(10),
           width: double.infinity,
-          height: 200,
+          height: 180,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -40,7 +42,7 @@ class RecipeTile extends StatelessWidget {
 
           margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
           width: double.infinity,
-          height: 200,
+          height: 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Colors.black.withOpacity(0.25),
@@ -51,7 +53,7 @@ class RecipeTile extends StatelessWidget {
 
           margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
           width: double.infinity,
-          height: 200,
+          height: 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             
@@ -67,6 +69,13 @@ class RecipeTile extends StatelessWidget {
               ),
 
                   child: ListTile(
+
+                    onTap: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  RecipeMoreDetails(title: recipe.title, category: recipe.category, ingredients: recipe.ingredients, directions: recipe.directions, displayname: recipe.displayname, recipepicurl: recipe.recipepicurl, documentid: recipe.documentid))
+                              );
+                    },
               
                 leading: CircleAvatar(
                 
