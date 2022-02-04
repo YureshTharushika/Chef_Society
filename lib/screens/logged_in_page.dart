@@ -42,7 +42,7 @@ class _LoggedInPageState extends State<LoggedInPage> {
 
     
     final user = FirebaseAuth.instance.currentUser!;
-    const urlImage = 'https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
+    const urlImage = 'https://images.pexels.com/photos/3964662/pexels-photo-3964662.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940';
     final items = <Widget>[
       Icon(Icons.comment, size: 30),
       Icon(Icons.home, size: 30),
