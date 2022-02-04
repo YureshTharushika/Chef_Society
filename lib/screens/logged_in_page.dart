@@ -1,11 +1,15 @@
 import 'package:chefsociety/models/recipe.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
+import 'package:chefsociety/screens/header_drawer_page.dart';
+import 'package:chefsociety/screens/jobs_page.dart';
+import 'package:chefsociety/screens/q_and_a_page.dart';
+import 'package:chefsociety/screens/recipes_page.dart';
 import 'package:chefsociety/services/database.dart';
 import 'package:chefsociety/services/google_sign_in.dart';
 import 'package:chefsociety/shared/shared_widgets.dart';
-import 'package:chefsociety/widgets/home_category_tiles.dart';
-import 'package:chefsociety/widgets/recipe_list.dart';
-import 'package:chefsociety/widgets/recipe_tile.dart';
+import 'package:chefsociety/widgets/drawer_list.dart';
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +17,24 @@ import 'package:provider/provider.dart';
 
 
 
-class LoggedInPage extends StatelessWidget {
+class LoggedInPage extends StatefulWidget {
   const LoggedInPage({ Key? key }) : super(key: key);
+
+  @override
+  State<LoggedInPage> createState() => _LoggedInPageState();
+}
+
+class _LoggedInPageState extends State<LoggedInPage> {
+
+  int index = 1;
+
+  final screens = [
+        QandAPage(),
+        RecipesPage(),
+        JobsPage(),
+
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +43,11 @@ class LoggedInPage extends StatelessWidget {
     
     final user = FirebaseAuth.instance.currentUser!;
     const urlImage = 'https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
+    final items = <Widget>[
+      Icon(Icons.comment, size: 30),
+      Icon(Icons.home, size: 30),
+      Icon(Icons.person, size: 30),
+    ];
 
     return BackgroundImageWidget(
       image: const NetworkImage(urlImage),
@@ -35,90 +60,44 @@ class LoggedInPage extends StatelessWidget {
 
         child: Scaffold(
 
+          extendBody: true,
+
           
-          //backgroundColor: Colors.transparent,
-          // appBar: AppBar(
-          //   title: const Text('Home'),
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text('Home'),
             
-          //   actions: [
-          //     ElevatedButton(
+            // actions: [
+            //   ElevatedButton(
                 
-          //       child: const Text('logout'),
-          //       onPressed: (){
+            //     child: const Text('logout'),
+            //     onPressed: (){
 
-          //         final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
-          //         provider.logOut();
-          //                   },
-          //       ),
-          //   ],
-          // ),
-          body: //RecipeList()
-          CustomScrollView(
-            
-            slivers: [
-              SliverAppBar(
-                backgroundColor: Colors.white,
-                title: const Text('Recipes',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                ),
-                centerTitle: false,
-                floating: true,
-                actions: [
+            //       final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
+            //       provider.logOut();
+            //                 },
+            //     ),
+            // ],
+          ),
 
-                  IconButton(
-                        onPressed: (){
-                          final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
-                          provider.logOut();
-                          print('logout');
-                        }, 
-                        icon: Icon(Icons.logout_rounded),
-                        iconSize: 25.0,
-                        color: Colors.black,
-                        ),
-
-                      ],
-
-              ),
+          
 
 
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                sliver: SliverToBoxAdapter(
-                  
-                  child: Container(
-                    child: const Text('Categories',
-                    style:  TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    ),
-                    ),
-                  ),
-                ),
-                ),
+          body: screens[index],
 
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(2, 5, 2, 5),
-                sliver: SliverToBoxAdapter(
-                  
-                  child: Categories(),
-                ),
-                ),
-
-                const SliverPadding(
-                padding: EdgeInsets.fromLTRB(2, 5, 2, 5),
-                
-                sliver: RecipeList(),
-                
-                ),
-
-
+          drawer: Drawer(
+            child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: [
+                    HeaderDrawer(),
+                    DrawerList(),
                   ],
-            ),
+                ),
+              ),
+              ),
+          ),
+          
 
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
@@ -129,6 +108,16 @@ class LoggedInPage extends StatelessWidget {
                               );
                         },
                                                     ),
+
+          bottomNavigationBar: CurvedNavigationBar(
+            backgroundColor: Colors.transparent,
+            height: 60,
+            animationCurve: Curves.easeInOut,
+            animationDuration: Duration(milliseconds: 500),
+            index: index,
+            items: items,
+            onTap: (index) => setState(() => this.index = index),
+              ),
                                                     
           
           
