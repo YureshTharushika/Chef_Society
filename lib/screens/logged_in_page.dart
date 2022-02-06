@@ -1,11 +1,12 @@
 import 'package:chefsociety/models/recipe.dart';
+import 'package:chefsociety/screens/add_new_question_page.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
 import 'package:chefsociety/screens/header_drawer_page.dart';
 import 'package:chefsociety/screens/jobs_page.dart';
 import 'package:chefsociety/screens/q_and_a_page.dart';
 import 'package:chefsociety/screens/recipes_page.dart';
 import 'package:chefsociety/services/database.dart';
-import 'package:chefsociety/services/google_sign_in.dart';
+
 import 'package:chefsociety/shared/shared_widgets.dart';
 import 'package:chefsociety/widgets/drawer_list.dart';
 
@@ -102,10 +103,17 @@ class _LoggedInPageState extends State<LoggedInPage> {
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
             onPressed: (){
-               Navigator.push(
+               if(index==0){
+                 Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AddNewQuestionPage())
+                              );
+               }else if(index==1){
+                 Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const AddNewRecipe())
                               );
+               }
                         },
                                                     ),
 

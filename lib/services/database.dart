@@ -23,6 +23,8 @@ class DatabaseService{
 
 final CollectionReference recipeCollection = FirebaseFirestore.instance.collection('recipes');
 
+final CollectionReference questionCollection = FirebaseFirestore.instance.collection('questions');
+
 
 
 
@@ -68,6 +70,32 @@ Future addNewComment(String recipeid,String userid,String displayname,String pho
       }
 
 }
+
+//add new question
+
+Future addNewQuestion(String title, String question ,String tags , String userid, String displayname, String photourl) async{
+
+  try {
+    return await questionCollection.doc().set({
+      'title': title,
+      'question': question,
+      'tags': tags,
+      'userid': userid,
+      'displayname': displayname,
+      'photourl': photourl,
+      'uploadtime': DateTime.now(),
+
+      
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+
+}
+
+
+
+
 
 
 //recipe list from snapshot

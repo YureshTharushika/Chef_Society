@@ -1,4 +1,5 @@
 import 'package:chefsociety/screens/bmi_calculator_page.dart';
+import 'package:chefsociety/screens/colorie_calculator_page.dart';
 import 'package:chefsociety/screens/profile_page.dart';
 import 'package:chefsociety/services/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,9 @@ class _DrawerListState extends State<DrawerList> {
                   currentTab == 1? true: false),
           menuItem(2,"BMI Calculator",Icons.calculate,
                   currentTab == 2? true: false),
-          menuItem(3,"Logout",Icons.logout,
+          menuItem(3,"Calorie Calculator",Icons.calculate,
+                  currentTab == 3? true: false),
+          menuItem(4,"Logout",Icons.logout,
                   currentTab == 3? true: false),
         ],
       ),
@@ -62,6 +65,12 @@ class _DrawerListState extends State<DrawerList> {
                               );
               }else if(id == 3){
                 currentTab = 3;
+                Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const CalorieCalculatorPage())
+                              );
+              }else if(id == 4){
+                currentTab = 4;
                   final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
                   provider.logOut();
               }
