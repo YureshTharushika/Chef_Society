@@ -5,6 +5,8 @@
 
 import 'dart:io';
 
+import 'package:chefsociety/models/question.dart';
+import 'package:chefsociety/models/question_answer.dart';
 import 'package:chefsociety/models/recipe.dart';
 import 'package:chefsociety/models/recipe_comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,8 +17,11 @@ class DatabaseService{
   
 
   final CollectionReference? recipeCommentsCollection;
+  final CollectionReference? questionAnswersCollection;
 
-  DatabaseService({this.recipeCommentsCollection});
+  DatabaseService({
+    this.recipeCommentsCollection,
+    this.questionAnswersCollection});
 
 
 // collection reference
@@ -94,6 +99,27 @@ Future addNewQuestion(String title, String question ,String tags , String userid
 }
 
 
+//add new answer to a question
+
+Future addNewAnswer(String questionid,String userid,String displayname,String photourl,String answerdetails)async{
+
+    try{
+
+      return await questionCollection.doc(questionid).collection("answers").doc().set({
+      'userid': userid,
+      'displayname': displayname,
+      'photourl': photourl,
+      'answerdetails': answerdetails,
+      'postedtime': DateTime.now(),
+      
+      });
+
+    }on Exception catch (e) {
+        print(e.toString());
+      }
+
+}
+
 
 
 
@@ -119,6 +145,8 @@ List<Recipe> _recipeListFromSnapshot(QuerySnapshot snapshot){
 
 }
 
+//recipe comment list from snapshot
+
 
 List<RecipeComment> _recipeCommentsListFromSnapshot(QuerySnapshot snapshot){
 
@@ -137,6 +165,44 @@ List<RecipeComment> _recipeCommentsListFromSnapshot(QuerySnapshot snapshot){
 }
 
 
+//question list from snapshot
+
+List<Question> _questionListFromSnapshot(QuerySnapshot snapshot){
+
+    return snapshot.docs.map((doc){
+
+            return Question(
+              title: doc.get('title') ?? '',
+              question: doc.get('question') ?? '',
+              tags: doc.get('tags') ?? '',
+              userid: doc.get('userid') ?? '',
+              displayname: doc.get('displayname') ?? '',
+              photourl: doc.get('photourl') ?? '',
+              uploadtime: doc.get('uploadtime').toDate() ?? '',
+              documentid: doc.id,
+            );
+    }).toList();
+
+}
+
+//question answer list from snapshot
+
+
+List<QuestionAnswer> _questionAnswersListFromSnapshot(QuerySnapshot snapshot){
+
+        return snapshot.docs.map((doc){
+            return QuestionAnswer(
+              userid: doc.get('userid') ?? '',
+              displayname: doc.get('displayname') ?? '',
+              photourl: doc.get('photourl') ?? '',
+              answerdetails: doc.get('answerdetails') ?? '',
+              postedtime: doc.get('postedtime').toDate() ?? DateTime.now(),
+              documentid: doc.id,
+            );
+
+        }).toList();
+
+}
 
 
 
@@ -155,7 +221,25 @@ Stream<List<RecipeComment>> get recipeComments{
 }
 
 
+
+// question stream
+Stream<List<Question>> get questions {
+
+  return questionCollection.snapshots().map(_questionListFromSnapshot);
 }
+
+
+// question answers stream
+
+Stream<List<QuestionAnswer>> get questionAnswers{
+
+  return questionAnswersCollection!.snapshots().map(_questionAnswersListFromSnapshot);
+}
+
+}
+
+
+
 
 
 
