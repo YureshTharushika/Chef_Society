@@ -1,9 +1,9 @@
 import 'package:chefsociety/models/recipe.dart';
+import 'package:chefsociety/screens/add_new_job_page.dart';
 import 'package:chefsociety/screens/add_new_question_page.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
 import 'package:chefsociety/screens/header_drawer_page.dart';
-import 'package:chefsociety/screens/home/components/frontPage.dart';
-import 'package:chefsociety/screens/home/home_screen.dart';
+
 import 'package:chefsociety/screens/jobs_page.dart';
 import 'package:chefsociety/screens/q_and_a_page.dart';
 import 'package:chefsociety/screens/recipes_page.dart';
@@ -47,10 +47,7 @@ class _LoggedInPageState extends State<LoggedInPage> {
 
     return BackgroundImageWidget(
       image: const NetworkImage(urlImage),
-      child: StreamProvider<List<Recipe>>.value(
-        initialData: [],
-        value: DatabaseService().recipes,
-        child: Scaffold(
+      child: Scaffold(
           extendBody: true,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -96,7 +93,7 @@ class _LoggedInPageState extends State<LoggedInPage> {
                         builder: (context) => const AddNewRecipe()));
               } else if (index == 2) {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => DataUpload()));
+                    MaterialPageRoute(builder: (context) => const AddNewJobPage()));
               }
             },
           ),
@@ -110,7 +107,7 @@ class _LoggedInPageState extends State<LoggedInPage> {
             onTap: (index) => setState(() => this.index = index),
           ),
         ),
-      ),
+      
     );
   }
 }

@@ -1,16 +1,24 @@
-import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:chefsociety/models/Product.dart';
 
-import '../../../constants.dart';
+
+import 'package:chefsociety/shared/constants.dart';
+
+
+import 'package:flutter/material.dart';
+
+
 
 class ItemCard extends StatelessWidget {
-  final Product product;
+
+  final String title;
+  final String jobpicurl;
+  final String salary;
   final VoidCallback press;
 
   const ItemCard({
     Key? key,
-    required this.product,
+    required this.title,
+    required this.jobpicurl,
+    required this.salary,
     required this.press,
   }) : super(key: key);
 
@@ -23,24 +31,27 @@ class ItemCard extends StatelessWidget {
         children: [
           Expanded(
               child: Container(
-                  padding: EdgeInsets.all(kDefaultPaddin),
+                  padding: const EdgeInsets.all(kDefaultPaddin),
                   decoration: BoxDecoration(
-                      color: product.color,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(width: 2),
                       image: DecorationImage(
-                        image: AssetImage(product.image),
+                        image: NetworkImage(jobpicurl),
                         fit: BoxFit.cover,
-                      )))),
+                      ),
+                      ),
+                      ),
+                      ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-            child: Text(product.title,
-                style: TextStyle(color: kTextDarkGreen, fontSize: 18)),
+            child: Text(title,
+                style: const TextStyle(color: kTextDarkGreen, fontSize: 18)),
           ),
           Text(
-            "\Rs${product.price}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
-          )
+            "\Rs${salary}",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+          ),
         ],
       ),
     );

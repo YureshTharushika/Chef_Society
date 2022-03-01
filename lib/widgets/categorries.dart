@@ -1,8 +1,9 @@
+import 'package:chefsociety/shared/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
 
-// We need satefull widget for our categories
+
+
 
 class Categories extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
+  
   List<String> categories = [
     "Restuarant chef",
     "Personal chef",
@@ -18,7 +20,8 @@ class _CategoriesState extends State<Categories> {
     "Bartendar",
     "Cake designer",
   ];
-  // By default our first item will be selected
+
+  
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {

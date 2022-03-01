@@ -5,6 +5,7 @@
 
 import 'dart:io';
 
+import 'package:chefsociety/models/job.dart';
 import 'package:chefsociety/models/recipe.dart';
 import 'package:chefsociety/models/recipe_comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,6 +25,8 @@ class DatabaseService{
 final CollectionReference recipeCollection = FirebaseFirestore.instance.collection('recipes');
 
 final CollectionReference questionCollection = FirebaseFirestore.instance.collection('questions');
+
+final CollectionReference jobCollection = FirebaseFirestore.instance.collection('jobs');
 
 
 
@@ -136,6 +139,26 @@ List<RecipeComment> _recipeCommentsListFromSnapshot(QuerySnapshot snapshot){
 
 }
 
+//job list from snapshot
+
+List<Job> _jobListFromSnapshot(QuerySnapshot snapshot){
+
+    return snapshot.docs.map((doc){
+
+            return Job(
+              title: doc.get('title') ?? '',
+              description: doc.get('description') ?? '',
+              salary: doc.get('salary') ?? '',
+              contact: doc.get('contact') ?? '',
+              userid: doc.get('userid') ?? '',
+              displayname: doc.get('displayname') ?? '',
+              photourl: doc.get('photourl') ?? '',
+              jobpicurl: doc.get('jobpicurl') ?? '',
+              documentid: doc.id,
+            );
+    }).toList();
+
+}
 
 
 
@@ -152,6 +175,13 @@ Stream<List<Recipe>> get recipes {
 Stream<List<RecipeComment>> get recipeComments{
 
   return recipeCommentsCollection!.snapshots().map(_recipeCommentsListFromSnapshot);
+}
+
+
+// job stream
+Stream<List<Job>> get jobs {
+
+  return jobCollection.snapshots().map(_jobListFromSnapshot);
 }
 
 
