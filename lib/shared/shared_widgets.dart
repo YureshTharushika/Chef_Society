@@ -20,7 +20,7 @@ class BackgroundImageWidget extends StatelessWidget {
             image: image,
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.1), 
+              Colors.black.withOpacity(0.5), 
               BlendMode.darken
               ),
             ),

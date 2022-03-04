@@ -37,11 +37,13 @@ class QuestionTile extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
         padding:const EdgeInsets.all(10),
         width: double.infinity,
-        height: 160,
+        height: 165,
         
         
         decoration: BoxDecoration(
-        
+              border: Border.all(
+              color: Colors.teal.shade300,
+              width: 4),
               color: Colors.white60,
               boxShadow: [
                 BoxShadow(

@@ -1,4 +1,5 @@
 import 'package:chefsociety/models/recipe.dart';
+import 'package:chefsociety/screens/add_new_job_page.dart';
 import 'package:chefsociety/screens/add_new_question_page.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
 import 'package:chefsociety/screens/header_drawer_page.dart';
@@ -28,6 +29,11 @@ class LoggedInPage extends StatefulWidget {
 class _LoggedInPageState extends State<LoggedInPage> {
 
   int index = 1;
+  String mainTitle = 'Recipes';
+  String appBarColor = 'Orange';
+  Color iconColor1 = Colors.white;
+  Color iconColor2 = Colors.black;
+  Color iconColor3 = Colors.white;
 
   final screens = [
         QandAPage(),
@@ -45,28 +51,49 @@ class _LoggedInPageState extends State<LoggedInPage> {
     final user = FirebaseAuth.instance.currentUser!;
     const urlImage = 'https://images.pexels.com/photos/3964662/pexels-photo-3964662.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940';
     final items = <Widget>[
-      Icon(Icons.comment, size: 30),
-      Icon(Icons.home, size: 30),
-      Icon(Icons.person, size: 30),
+      Icon(Icons.comment, size: 30,color: iconColor1,),
+      Icon(Icons.home, size: 30,color: iconColor2,),
+      Icon(Icons.person, size: 30,color: iconColor3,),
     ];
 
     return BackgroundImageWidget(
       image: const NetworkImage(urlImage),
-      child: StreamProvider<List<Recipe>>.value(
-        
-        initialData: [],
-
-        value: DatabaseService().recipes,
-        
-
-        child: Scaffold(
+      child: Scaffold(
 
           extendBody: true,
 
           
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('Home'),
+            title: Text(mainTitle),
+            flexibleSpace: Container(
+                          decoration:  BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.center,
+                            end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  Colors.teal, 
+                                  Colors.teal.shade200
+                                  ]
+                                  ),
+                              ),
+                            ),
+            
+            
+            
+            
+            // gradient: LinearGradient(
+            //             begin: Alignment.bottomLeft,
+            //             end: Alignment.topRight,
+            //             colors: [
+                          
+            //               Colors.white,
+            //               Colors.teal
+            //               //Color(0xFF2ECC71)
+            //             ],
+            //             ),
+                        
+            
             
             // actions: [
             //   ElevatedButton(
@@ -104,36 +131,80 @@ class _LoggedInPageState extends State<LoggedInPage> {
             child: const Icon(Icons.add),
             onPressed: (){
                if(index==0){
+
                  Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const AddNewQuestionPage())
                               );
                }else if(index==1){
+                 
                  Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const AddNewRecipe())
+                              );
+               }else if(index==2){
+                 
+                 Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AddNewJobPage())
                               );
                }
                         },
                                                     ),
 
-          bottomNavigationBar: CurvedNavigationBar(
+          bottomNavigationBar: 
+          
+          
+          CurvedNavigationBar(
             backgroundColor: Colors.transparent,
+            color: Colors.teal.shade400,
+            //buttonBackgroundColor: Colors.white,
+
+            // flexibleSpace: Container(
+            //               decoration:  BoxDecoration(
+            //               gradient: LinearGradient(
+            //                 begin: Alignment.center,
+            //                 end: Alignment.bottomCenter,
+            //                     colors: <Color>[
+            //                       Colors.teal, 
+            //                       Colors.teal.shade200
+            //                       ]
+            //                       ),
+            //                   ),
+            //                 ),
             height: 60,
             animationCurve: Curves.easeInOut,
             animationDuration: Duration(milliseconds: 500),
             index: index,
             items: items,
-            onTap: (index) => setState(() => this.index = index),
+            onTap: (index) => setState(() { 
+              this.index = index;
+              if(index==0){
+                mainTitle = 'Q & A';
+                iconColor1 = Colors.black;
+                iconColor2 = Colors.white;
+                iconColor3 = Colors.white;
+              }else if(index==1){
+                mainTitle = 'Recipes';
+                iconColor2 = Colors.black;
+                iconColor1 = Colors.white;
+                iconColor3 = Colors.white;
+              }else if(index==2){
+                mainTitle = 'Jobs';
+                iconColor3 = Colors.black;
+                iconColor2 = Colors.white;
+                iconColor1 = Colors.white;
+              }
+              }),
               ),
                                                     
           
           
         ),
-      ),
+      );
         
       
-    );
+    
   }
 
 
@@ -141,3 +212,46 @@ class _LoggedInPageState extends State<LoggedInPage> {
 
 
 
+// Widget _createBottomNavigationBar() {
+//     return Container(
+//       decoration: BoxDecoration(
+//         gradient: LinearGradient(
+//           colors: [Color(0xFF00D0E1), Color(0xFF00B3FA)],
+//           begin: Alignment.topLeft,
+//           end: Alignment.topRight,
+//           stops: [0.0, 0.8],
+//           tileMode: TileMode.clamp,
+//         ),
+//       ),
+//       child: CurvedNavigationBar(
+//             backgroundColor: Colors.transparent,
+//             // flexibleSpace: Container(
+//             //               decoration:  BoxDecoration(
+//             //               gradient: LinearGradient(
+//             //                 begin: Alignment.center,
+//             //                 end: Alignment.bottomCenter,
+//             //                     colors: <Color>[
+//             //                       Colors.teal, 
+//             //                       Colors.teal.shade200
+//             //                       ]
+//             //                       ),
+//             //                   ),
+//             //                 ),
+//             height: 60,
+//             animationCurve: Curves.easeInOut,
+//             animationDuration: Duration(milliseconds: 500),
+//             index: index,
+//             items: items,
+//             onTap: (index) => setState(() { 
+//               this.index = index;
+//               if(index==0){
+//                 mainTitle = 'Q & A';
+//               }else if(index==1){
+//                 mainTitle = 'Recipes';
+//               }else if(index==2){
+//                 mainTitle = 'Jobs';
+//               }
+//               }),
+//               ),
+//     );
+//   }

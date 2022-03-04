@@ -20,11 +20,14 @@ class RecipeTile extends StatelessWidget {
       children: [
         Container(
           
-          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           padding:const EdgeInsets.all(10),
           width: double.infinity,
           height: 180,
           decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.teal.shade300,
+              width: 4),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.4),
@@ -40,7 +43,7 @@ class RecipeTile extends StatelessWidget {
 
         Container(
 
-          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           width: double.infinity,
           height: 180,
           decoration: BoxDecoration(
@@ -51,7 +54,7 @@ class RecipeTile extends StatelessWidget {
 
         Container(
 
-          margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           width: double.infinity,
           height: 180,
           decoration: BoxDecoration(

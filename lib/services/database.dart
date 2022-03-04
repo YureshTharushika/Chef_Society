@@ -5,6 +5,7 @@
 
 import 'dart:io';
 
+import 'package:chefsociety/models/job.dart';
 import 'package:chefsociety/models/question.dart';
 import 'package:chefsociety/models/question_answer.dart';
 import 'package:chefsociety/models/recipe.dart';
@@ -30,6 +31,7 @@ final CollectionReference recipeCollection = FirebaseFirestore.instance.collecti
 
 final CollectionReference questionCollection = FirebaseFirestore.instance.collection('questions');
 
+final CollectionReference jobCollection = FirebaseFirestore.instance.collection('jobs');
 
 
 
@@ -121,6 +123,31 @@ Future addNewAnswer(String questionid,String userid,String displayname,String ph
 }
 
 
+//add new job
+
+Future addNewJob(String title, String country ,String city , String description , double salary, int contact, String userid, String displayname, String photourl, String jobpicurl) async{
+
+  try {
+    return await jobCollection.doc().set({
+      'title': title,
+      'country': country,
+      'city': city,
+      'description': description,
+      'salary': salary,
+      'contact': contact,
+      'userid': userid,
+      'displayname': displayname,
+      'photourl': photourl,
+      'jobpicurl': jobpicurl,
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+
+}
+
+
+
 
 
 
@@ -205,6 +232,29 @@ List<QuestionAnswer> _questionAnswersListFromSnapshot(QuerySnapshot snapshot){
 }
 
 
+//job list from snapshot
+
+List<Job> _jobListFromSnapshot(QuerySnapshot snapshot){
+
+    return snapshot.docs.map((doc){
+
+            return Job(
+              title: doc.get('title') ?? '',
+              country: doc.get('country') ?? '',
+              city: doc.get('city') ?? '',
+              description: doc.get('description') ?? '',
+              salary: doc.get('salary') ?? '',
+              contact: doc.get('contact') ?? '',
+              userid: doc.get('userid') ?? '',
+              displayname: doc.get('displayname') ?? '',
+              photourl: doc.get('photourl') ?? '',
+              jobpicurl: doc.get('jobpicurl') ?? '',
+              documentid: doc.id,
+            );
+    }).toList();
+
+}
+
 
 // recipe stream
 Stream<List<Recipe>> get recipes {
@@ -234,6 +284,13 @@ Stream<List<Question>> get questions {
 Stream<List<QuestionAnswer>> get questionAnswers{
 
   return questionAnswersCollection!.snapshots().map(_questionAnswersListFromSnapshot);
+}
+
+
+// job stream
+Stream<List<Job>> get jobs {
+
+  return jobCollection.snapshots().map(_jobListFromSnapshot);
 }
 
 }

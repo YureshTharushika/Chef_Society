@@ -86,15 +86,16 @@ class _DrawerListState extends State<DrawerList> {
                 child: Icon(
                   icon,
                   size: 20,
-                  color: Colors.black,
+                  color: Colors.teal,
                   ),
                 ),
               Expanded(
                 flex: 3,
                 child: Text(title,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,),
+                              color: Colors.teal,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
                             ),
                 ),
             ],
