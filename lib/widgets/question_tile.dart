@@ -44,7 +44,7 @@ class QuestionTile extends StatelessWidget {
               border: Border.all(
               color: Colors.teal.shade300,
               width: 4),
-              color: Colors.white60,
+              color: Colors.white70,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,

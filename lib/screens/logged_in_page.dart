@@ -1,4 +1,4 @@
-import 'package:chefsociety/models/recipe.dart';
+
 import 'package:chefsociety/screens/add_new_job_page.dart';
 import 'package:chefsociety/screens/add_new_question_page.dart';
 import 'package:chefsociety/screens/add_new_recipe.dart';
@@ -6,16 +6,20 @@ import 'package:chefsociety/screens/header_drawer_page.dart';
 import 'package:chefsociety/screens/jobs_page.dart';
 import 'package:chefsociety/screens/q_and_a_page.dart';
 import 'package:chefsociety/screens/recipes_page.dart';
-import 'package:chefsociety/services/database.dart';
+
 
 import 'package:chefsociety/shared/shared_widgets.dart';
 import 'package:chefsociety/widgets/drawer_list.dart';
+
+import 'package:chefsociety/widgets/search_delegates/job_search_delegate.dart';
+import 'package:chefsociety/widgets/search_delegates/q_and_a_search_delegate.dart';
+import 'package:chefsociety/widgets/search_delegates/recipe_search_delegate.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 
 
@@ -95,17 +99,36 @@ class _LoggedInPageState extends State<LoggedInPage> {
                         
             
             
-            // actions: [
-            //   ElevatedButton(
+            actions: [
+             IconButton(
                 
-            //     child: const Text('logout'),
-            //     onPressed: (){
+                icon: const Icon(Icons.search),
+                
+                onPressed: (){
 
-            //       final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
-            //       provider.logOut();
-            //                 },
-            //     ),
-            // ],
+                  if(index==0){
+                    showSearch(
+                    context: context, 
+                    delegate: QandASearchDelegate(),
+                    );
+                  }
+
+                  if(index==1){
+                    showSearch(
+                    context: context, 
+                    delegate: RecipeSearchDelegate(),
+                    );
+                  }
+
+                  if(index==2){
+                    showSearch(
+                    context: context, 
+                    delegate: JobSearchDelegate(),
+                    );
+                  }
+                            },
+                ),
+            ],
           ),
 
           
@@ -212,46 +235,3 @@ class _LoggedInPageState extends State<LoggedInPage> {
 
 
 
-// Widget _createBottomNavigationBar() {
-//     return Container(
-//       decoration: BoxDecoration(
-//         gradient: LinearGradient(
-//           colors: [Color(0xFF00D0E1), Color(0xFF00B3FA)],
-//           begin: Alignment.topLeft,
-//           end: Alignment.topRight,
-//           stops: [0.0, 0.8],
-//           tileMode: TileMode.clamp,
-//         ),
-//       ),
-//       child: CurvedNavigationBar(
-//             backgroundColor: Colors.transparent,
-//             // flexibleSpace: Container(
-//             //               decoration:  BoxDecoration(
-//             //               gradient: LinearGradient(
-//             //                 begin: Alignment.center,
-//             //                 end: Alignment.bottomCenter,
-//             //                     colors: <Color>[
-//             //                       Colors.teal, 
-//             //                       Colors.teal.shade200
-//             //                       ]
-//             //                       ),
-//             //                   ),
-//             //                 ),
-//             height: 60,
-//             animationCurve: Curves.easeInOut,
-//             animationDuration: Duration(milliseconds: 500),
-//             index: index,
-//             items: items,
-//             onTap: (index) => setState(() { 
-//               this.index = index;
-//               if(index==0){
-//                 mainTitle = 'Q & A';
-//               }else if(index==1){
-//                 mainTitle = 'Recipes';
-//               }else if(index==2){
-//                 mainTitle = 'Jobs';
-//               }
-//               }),
-//               ),
-//     );
-//   }

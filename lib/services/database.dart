@@ -19,10 +19,15 @@ class DatabaseService{
 
   final CollectionReference? recipeCommentsCollection;
   final CollectionReference? questionAnswersCollection;
+  
+  final String? searchKey;
 
   DatabaseService({
     this.recipeCommentsCollection,
-    this.questionAnswersCollection});
+    this.questionAnswersCollection,
+    
+    this.searchKey,
+    });
 
 
 // collection reference
@@ -293,9 +298,40 @@ Stream<List<Job>> get jobs {
   return jobCollection.snapshots().map(_jobListFromSnapshot);
 }
 
+
+
+// recipe search query
+Stream<List<Recipe>> get recipesQuery {
+
+  return recipeCollection.where('title', isGreaterThanOrEqualTo: searchKey!)
+                        .where('title', isLessThan: searchKey! +'z')
+                        .snapshots().map(_recipeListFromSnapshot);
 }
 
 
+// job search query
+Stream<List<Job>> get jobsQuery {
+
+  return jobCollection.where('title', isGreaterThanOrEqualTo: searchKey!)
+                        .where('title', isLessThan: searchKey! +'z')
+                        .snapshots().map(_jobListFromSnapshot);
+}
+
+Stream<List<Question>> get questionsQuery {
+
+  return questionCollection.where('title', isGreaterThanOrEqualTo: searchKey!)
+                        .where('title', isLessThan: searchKey! +'z')
+                        .snapshots().map(_questionListFromSnapshot);
+}
+
+}
+
+
+
+// FirebaseFirestore.instance.collection('Col-Name')
+//                         .where('fieldName', isGreaterThanOrEqualTo: searchKey)
+//                         .where('fieldName', isLessThan: searchKey +'z')
+//                         .snapshots()
 
 
 
