@@ -21,12 +21,20 @@ class DatabaseService{
   final CollectionReference? questionAnswersCollection;
   
   final String? searchKey;
+  final String? category1;
+  final String? category2;
+  final String? category3;
+  final String? category4;
 
   DatabaseService({
     this.recipeCommentsCollection,
     this.questionAnswersCollection,
     
     this.searchKey,
+    this.category1,
+    this.category2,
+    this.category3,
+    this.category4,
     });
 
 
@@ -317,12 +325,20 @@ Stream<List<Job>> get jobsQuery {
                         .snapshots().map(_jobListFromSnapshot);
 }
 
+// question search query
 Stream<List<Question>> get questionsQuery {
 
   return questionCollection.where('title', isGreaterThanOrEqualTo: searchKey!)
                         .where('title', isLessThan: searchKey! +'z')
                         .snapshots().map(_questionListFromSnapshot);
 }
+
+// bmi recommended recipe  query
+Stream<List<Recipe>> get bmiRecommendedRecipesQuery {
+
+  return recipeCollection.where('category', isEqualTo: category1!).snapshots().map(_recipeListFromSnapshot);
+}
+
 
 }
 

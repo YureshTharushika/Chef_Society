@@ -73,6 +73,7 @@ flutter:
     - images/
     - assets/images/
     - assets/background/
+    - assets/bmi/
     - assets/icons/back.png
   #   - images/a_dot_ham.jpeg
 

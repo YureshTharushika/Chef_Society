@@ -1,4 +1,12 @@
+import 'package:chefsociety/models/recipe.dart';
+import 'package:chefsociety/screens/recipe_more_details.dart';
+import 'package:chefsociety/services/database.dart';
+import 'package:chefsociety/widgets/recipe_tile.dart';
+import 'package:chefsociety/widgets/workout_plans/high_bmi.dart';
+import 'package:chefsociety/widgets/workout_plans/low_bmi.dart';
+import 'package:chefsociety/widgets/workout_plans/mid_bmi.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BMICalculatorPage extends StatefulWidget {
   const BMICalculatorPage({ Key? key }) : super(key: key);
@@ -114,7 +122,16 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(10),
                 ),
-                onPressed: calculateBMI,
+                onPressed: (){
+                  calculateBMI();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    
+                    builder: (context) => buildSheet(),
+                  );
+                },
               ),
               const SizedBox(height: 15),
               Text(
@@ -154,7 +171,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
       ),
       
     );
-  }
+  } //Main Widget Ends Here
+ 
 
 OutlineInputBorder focusBorder(){
     return const OutlineInputBorder(
@@ -164,7 +182,7 @@ OutlineInputBorder focusBorder(){
           width: 3,
         )
     );
-  }
+  }//focusBorder Ends Here
 
   OutlineInputBorder inputBorder(){
     return const OutlineInputBorder( 
@@ -174,7 +192,7 @@ OutlineInputBorder focusBorder(){
           width: 3,
         )
     );
-  }
+  }//inputBorder Ends Here
 
 void calculateBMI() {
     double height = double.parse(_heightController.text) / 100;
@@ -187,7 +205,7 @@ void calculateBMI() {
       _result = result;
     });
 
-  }
+  }//calculateBMI Ends Here
 
   String message() {
     if(_result == 0) 
@@ -230,7 +248,7 @@ void calculateBMI() {
     {
       return "null";
     }
-  }
+  }//message Ends Here
 
   String advise() {
     if(_result == 0.00) 
@@ -253,7 +271,7 @@ void calculateBMI() {
     {
       return "null";
     }
-  }
+  }//advise Ends Here
 
   colors() {
     if(_result > 0 && _result < 16)
@@ -288,5 +306,510 @@ void calculateBMI() {
     {
       return Colors.redAccent[700];
     }
-  }
+  }//colors Ends Here
+
+
+
+Widget makeDismissable({required Widget child}) => GestureDetector(
+
+              behavior: HitTestBehavior.opaque,
+              onTap: () =>Navigator.of(context).pop(),
+              child: GestureDetector(onTap: (){},child: child,),
+
+          );
+//makeDismissable Ends Here
+
+Widget buildSheet() => makeDismissable(
+  child:DraggableScrollableSheet(
+        
+        initialChildSize: 0.8,
+        minChildSize: 0.5,
+        maxChildSize: 0.8,
+        builder: (_,controller) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+
+        ),
+        padding: EdgeInsets.all(16),
+
+        child: ListView(
+
+              controller: controller,       
+              children: [
+                
+                Text("Your BMI Index : ${_result.toStringAsFixed(2)}",
+                  style: TextStyle(
+                      color: colors(),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                        ),
+                  textAlign: TextAlign.center,
+                      ),
+
+                const SizedBox(height: 5),
+                Text(message(),
+                  style: TextStyle(
+                      color: colors(),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                        ),
+                  textAlign: TextAlign.center,
+                      ),
+                const SizedBox(height: 10),
+                Text(advise(),
+                  style: TextStyle(
+                      color: colors(),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                        ),
+                  textAlign: TextAlign.center,
+                      ),
+                const SizedBox(height: 10),
+                Divider(height: 3,),
+                Text('Suggested Recipes For You..'),
+
+                const SizedBox(height: 5),
+
+                recommendedRecipesList(),
+
+                const SizedBox(height: 10),
+                Divider(height: 3,),
+                Text('Suggested Workout Plan For You..'),
+                
+                const SizedBox(height: 5),
+
+                recommendedWorkoutPlan(),
+
+                
+              ],
+            ),
+            ),
+        )
+    );
+//buildSheet Ends Here
+
+
+
+Widget recommendedRecipesList(){
+  
+      return Column(
+            children: [
+                    if (_result < 18.5) ...[
+                      Container(
+                          height: 200,
+                          
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            //borderRadius: BorderRadius.circular(20),
+                          ),
+                          
+                          child: StreamProvider<List<Recipe>>.value(
+                          initialData: [],
+                          value: DatabaseService(category1: 'Main-Course', category2: 'Appetisers', category3: 'Dinner', category4: 'Breakfast').bmiRecommendedRecipesQuery,
+          
+                          child: Builder(
+                            
+                            builder: (BuildContext newContext){
+                              
+                              final recipes = Provider.of<List<Recipe>>(newContext);
+
+                              return ListView.builder(
+
+                                physics: const ClampingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: recipes.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                          return 
+                                            
+                                             Container(
+                                              
+                                                  width: 300,
+                                                  margin: EdgeInsets.all(5),
+                                                  //padding: EdgeInsets.all(10),
+                                                  
+                                                  decoration:  BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                                  
+                                                              ),
+                                              child: Card(
+                                                  elevation: 8,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  child: InkWell(
+
+                                                    child: Container(
+
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        image: DecorationImage(image: NetworkImage(recipes[index].recipepicurl),fit: BoxFit.cover),
+                                                      ),
+
+                                                      child: Center(
+                                                        child:  Text(recipes[index].title,
+                                                                    style: const TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: 16,
+                                                                      ),
+                                                                    ),
+                                                      ),    
+                                                    ),
+                                                    onTap:(){
+                                                      Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(builder: (context) =>  RecipeMoreDetails(title: recipes[index].title, category: recipes[index].category, ingredients: recipes[index].ingredients, directions: recipes[index].directions, displayname: recipes[index].displayname, recipepicurl: recipes[index].recipepicurl, documentid: recipes[index].documentid))
+                                                                    );
+                                                        }
+                                                  ),
+                                              ),
+                                            );
+                                          
+                                              }
+                                      );
+                            }
+                            ),
+                            ),
+                ),
+                      
+                    ] else if(_result >= 18.5 && _result < 25)...[
+                      Container(
+                          height: 200,
+                          
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            //borderRadius: BorderRadius.circular(20),
+                          ),
+                          
+                          child: StreamProvider<List<Recipe>>.value(
+                          initialData: [],
+                          value: DatabaseService(category1: 'Baked Goods', category2: 'Dessert', category3:'Snacks', category4: 'Lunch').bmiRecommendedRecipesQuery,
+          
+                          child: Builder(
+                            
+                            builder: (BuildContext newContext){
+                              
+                              final recipes = Provider.of<List<Recipe>>(newContext);
+
+                              return ListView.builder(
+
+                                physics: const ClampingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: recipes.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                          return 
+                                            
+                                             Container(
+                                              
+                                                  width: 300,
+                                                  margin: EdgeInsets.all(5),
+                                                  //padding: EdgeInsets.all(10),
+                                                  
+                                                  decoration:  BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                                  
+                                                              ),
+                                              child: Card(
+                                                  elevation: 8,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  child: InkWell(
+
+                                                    child: Container(
+
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        image: DecorationImage(image: NetworkImage(recipes[index].recipepicurl),fit: BoxFit.cover),
+                                                      ),
+
+                                                      child: Center(
+                                                        child:  Text(recipes[index].title,
+                                                                    style: const TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: 16,
+                                                                      ),
+                                                                    ),
+                                                      ),    
+                                                    ),
+                                                    onTap:(){
+                                                      Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(builder: (context) =>  RecipeMoreDetails(title: recipes[index].title, category: recipes[index].category, ingredients: recipes[index].ingredients, directions: recipes[index].directions, displayname: recipes[index].displayname, recipepicurl: recipes[index].recipepicurl, documentid: recipes[index].documentid))
+                                                                    );
+                                                        }
+                                                  ),
+                                              ),
+                                            );
+                                          
+                                              }
+                                      );
+                            }
+                            ),
+                            ),
+                ),
+                    ] else if(_result >= 25)...[
+                      Container(
+                          height: 200,
+                          
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            //borderRadius: BorderRadius.circular(20),
+                          ),
+                          
+                          child: StreamProvider<List<Recipe>>.value(
+                          initialData: [],
+                          value: DatabaseService(category1: 'Soups', category2: 'Salads', category3: 'Side-Dishes', category4: 'Drinks').bmiRecommendedRecipesQuery,
+          
+                          child: Builder(
+                            
+                            builder: (BuildContext newContext){
+                              
+                              final recipes = Provider.of<List<Recipe>>(newContext);
+
+                              return ListView.builder(
+
+                                physics: const ClampingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: recipes.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                          return 
+                                            
+                                             Container(
+                                              
+                                                  width: 300,
+                                                  margin: EdgeInsets.all(5),
+                                                  //padding: EdgeInsets.all(10),
+                                                  
+                                                  decoration:  BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                                  
+                                                              ),
+                                              child: Card(
+                                                  elevation: 8,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  child: InkWell(
+
+                                                    child: Container(
+
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        image: DecorationImage(image: NetworkImage(recipes[index].recipepicurl),fit: BoxFit.cover),
+                                                      ),
+
+                                                      child: Center(
+                                                        child:  Text(recipes[index].title,
+                                                                    style: const TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: 16,
+                                                                      ),
+                                                                    ),
+                                                      ),    
+                                                    ),
+                                                    onTap:(){
+                                                      Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(builder: (context) =>  RecipeMoreDetails(title: recipes[index].title, category: recipes[index].category, ingredients: recipes[index].ingredients, directions: recipes[index].directions, displayname: recipes[index].displayname, recipepicurl: recipes[index].recipepicurl, documentid: recipes[index].documentid))
+                                                                    );
+                                                        }
+                                                  ),
+                                              ),
+                                            );
+                                          
+                                              }
+                                      );
+                            }
+                            ),
+                            ),
+                ),
+                    ],
+                ],
+              );
+          
+
 }
+
+
+Widget recommendedWorkoutPlan(){
+
+
+    return Column(
+
+            children: [
+              if (_result < 18.5) ...[
+
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(5),
+                    //color: Colors.black,
+                    height: 100,
+                    child: Material(
+                      elevation: 10,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>  LowBmiWorkoutPlan())
+                                        );
+                                },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Center(child: 
+                                    Text("12 Weeks Muscle Gainer",
+                                    
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    ),
+                                    ),
+                            Center(child: 
+                                     Text("Beginner Workout Plan",
+                                     style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    ),
+                                    ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  ),
+
+
+                ] else if(_result >= 18.5 && _result < 25)...[
+                
+                    Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(5),
+                        //color: Colors.black,
+                        height: 100,
+                        child: Material(
+                          elevation: 10,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) =>  MidBmiWorkoutPlan())
+                                            );
+                                    },
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Center(child: 
+                                        Text("6 Weeks General Fitness",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                        ),
+                                        ),
+                                Center(child: 
+                                        Text("Beginner Workout Plan",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                        ),
+                                        ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      ),
+                
+                
+                
+                
+                  ] else if(_result >= 25)...[
+
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(5),
+                    //color: Colors.black,
+                    height: 100,
+                    child: Material(
+                      elevation: 10,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>  HighBmiWorkoutPlan())
+                                        );
+                                },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Center(child: 
+                                    Text("12 Weeks Fat Burner",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    ),
+                                    ),
+                            Center(child: 
+                                     Text("Beginner Workout Plan",
+                                     style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    ),
+                                    ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  ),
+                  
+
+                ],
+
+            ],
+    );
+
+
+}
+
+
+}
+
+
+
+
+
+
+
