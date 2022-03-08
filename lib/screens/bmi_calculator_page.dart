@@ -1,4 +1,5 @@
 import 'package:chefsociety/models/recipe.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:chefsociety/screens/recipe_more_details.dart';
 import 'package:chefsociety/services/database.dart';
 import 'package:chefsociety/widgets/recipe_tile.dart';
@@ -17,186 +18,208 @@ class BMICalculatorPage extends StatefulWidget {
 
 class _BMICalculatorPageState extends State<BMICalculatorPage> {
 
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-
-  static double _result = 0.0;
+  double _height = 170.0;
+  double _weight = 75.0;
+  double _result = 0;
+  String _condition = 'Select Data';
 
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+    
+
+    Size size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
           'BMI Calculator',
            style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white,
                             fontFamily: "Roboto",
                           ),
           ),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-      ),
-      body:Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/bmi.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Container(
-            decoration:BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ),
-          SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          centerTitle: true,
+          backgroundColor: Colors.teal,
+        ),
+        body: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(height: 15),
-              TextField(
-                controller: _heightController,
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Height in cm',
-                  icon: Icon(Icons.trending_up),
-                  enabledBorder: inputBorder(),
-                  focusedBorder: focusBorder(),
-                  hintText: '0',
-                  hintStyle: TextStyle(
-                    fontSize: 25,
-                    color: Colors.blue[900],
-                  )
+                children: [
+                      Container(
 
-                ),
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[900],
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              TextField(
-                controller: _weightController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText: 'Weight in Kg',
-                  icon: Icon(Icons.line_weight),
-                  enabledBorder: inputBorder(),
-                  focusedBorder: focusBorder(),
-                  hintText: '0',
-                  hintStyle: TextStyle(
-                    fontSize: 25,
-                    color: Colors.blue[900],
-                  )
-                ),
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[900],
-                ),
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.white,
+                                      elevation: 10,
+                                      
 
-              ),
-              const SizedBox(height: 30),
+                                      child: Column(
+                                            children: [
+                                              SizedBox(height: 30.0,),
+                                              Container(
+                                                width: double.infinity,
+                                                child: Column(
+                                                  children: [
+                                                    
+                                                    SizedBox(height: 20.0,),
+                                                    RichText(text: TextSpan(
+                                                    
+                                                    children:[
+                                                      const WidgetSpan(
+                                                            child: Icon(FontAwesomeIcons.rulerVertical,
+                                                            color: Colors.orange,),
+                                                            ),
+                                                            const TextSpan(text:"Height (cm) : ",
+                                                                style: TextStyle(
+                                                                  color: Colors.orange,
+                                                                  fontSize: 20.0,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                                ),
+                                                            TextSpan(
+                                                              text:_height.toStringAsFixed(2),
+                                                              style: const TextStyle(
+                                                                color: Colors.orange,
+                                                                fontSize: 20.0,
+                                                                fontWeight: FontWeight.bold
+                                                              ),
+                                                      )
+                                                    ]
+                                                    ),
+                                                    ),
+                                                    
+                                                    Slider(value: _height,
+                                                        min: 50,
+                                                        max: 250,
+                                                        onChanged: (height)
+                                                    {
+                                                      setState(() {
+                                                        _height = height;
+                                                      });
+                                                    },
+                                                    divisions: 250,
+                                                    label: "$_height",
+                                                      activeColor: Colors.teal,
+                                                      inactiveColor: Color(0xff3B233B),
+                                                    ),
+
+                                                    SizedBox(height: 20.0,),
+                                                    
+
+                                                    RichText(text: TextSpan(
+                                                        
+                                                        children:[
+                                                          const WidgetSpan(
+                                                            child: Icon(FontAwesomeIcons.weight,
+                                                            color: Colors.orange,),
+                                                            ),
+                                                          
+                                                          const TextSpan(text:" Weight (kg) : ",
+                                                              style: TextStyle(
+                                                                color: Colors.orange,
+                                                                fontSize: 20.0,
+                                                                fontWeight: FontWeight.bold,),
+                                                                ),
+                                                          
+                                                          TextSpan(
+                                                            text: _weight.toStringAsFixed(2),
+                                                            style: const TextStyle(
+                                                              color: Colors.orange,
+                                                              fontSize: 20.0,
+                                                              fontWeight: FontWeight.bold
+                                                            ),
+                                                          )
+                                                        ]
+                                                    ),
+                                                    ),
+                                                    Slider(value: _weight,
+                                                      min: 5,
+                                                      max: 300,
+                                                      onChanged: (weight)
+                                                      {
+                                                        setState(() {
+                                                          _weight = weight;
+                                                        });
+                                                      },
+                                                      divisions: 250,
+                                                      label: "$_weight",
+                                                      activeColor: Colors.teal,
+                                                      inactiveColor: Color(0xff3B233B),
+                                                    ),
+                                                    SizedBox(height: 15.0,),
+                                                    
+                                                    
+                                                    SizedBox(height: 5.0,),
+                                                    
+
+                                                    
+                                              
+                                                    
+                                                  
+                                                    
+
+
+
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+
+                            ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Divider(),
               ElevatedButton(
-                child: Text(
-                  "Calculate", 
-                  style: TextStyle(
-                    color: Colors.lime[50], 
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(10),
-                ),
-                onPressed: (){
-                  calculateBMI();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    
-                    builder: (context) => buildSheet(),
-                  );
-                },
-              ),
-              const SizedBox(height: 15),
-              Text(
-                _heightController.text.isEmpty || _weightController.text.isEmpty ? "Enter Values" : _result.toStringAsFixed(2),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colors(),
-                  fontSize: 40,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Text(
-                message(),
-                style: TextStyle(
-                  color: colors(),
-                  fontSize: 50,
-                  fontWeight: FontWeight.w800,
-                ),
-                textAlign: TextAlign.center,
-                ),
-              const SizedBox(height: 15),
-              Text(
-                advise(),
-                style: TextStyle(
-                  color: colors(),
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
-                ),
-                textAlign: TextAlign.center,
-                ),
-            ],
+                                    
+                                    child: const Text(
+                                      "Calculate", 
+                                      style: TextStyle(
+                                        color: Colors.white, 
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      
+                                      elevation: 10,
+                                      padding: const EdgeInsets.all(10),
+                                      primary: Colors.teal,
+                                      shape: const StadiumBorder(),
+                                    ),
+                                    
+                                    onPressed: (){
+
+                                      calculateBMI();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        
+                                        builder: (context) => buildSheet(),
+                                      );
+                                    },
+                                  ),
+
+
+                ],
           ),
         ),
       ),
-        ],
-      ),
-      
     );
   } //Main Widget Ends Here
  
 
-OutlineInputBorder focusBorder(){
-    return const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      borderSide: BorderSide(
-          color:Colors.greenAccent,
-          width: 3,
-        )
-    );
-  }//focusBorder Ends Here
 
-  OutlineInputBorder inputBorder(){
-    return const OutlineInputBorder( 
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-      borderSide: BorderSide(
-          color:Colors.redAccent,
-          width: 3,
-        )
-    );
-  }//inputBorder Ends Here
 
 void calculateBMI() {
-    double height = double.parse(_heightController.text) / 100;
-    double weight = double.parse(_weightController.text);
+    double height = (_height) / 100;
+    double weight =(_weight);
 
     double heightSquare = height * height;
     double result = weight / heightSquare;
@@ -205,7 +228,18 @@ void calculateBMI() {
       _result = result;
     });
 
-  }//calculateBMI Ends Here
+  }
+  
+  String value() {
+    if(_result != 0) 
+    {
+      return _result.toStringAsFixed(2);
+    }
+    else
+    {
+      return "";
+    }
+  }
 
   String message() {
     if(_result == 0) 
@@ -806,6 +840,9 @@ Widget recommendedWorkoutPlan(){
 
 
 }
+
+
+
 
 
 
