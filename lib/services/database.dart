@@ -337,10 +337,44 @@ Stream<List<Question>> get questionsQuery {
 Stream<List<Recipe>> get bmiRecommendedRecipesQuery {
 
   return recipeCollection.where('category', isEqualTo: category1!).snapshots().map(_recipeListFromSnapshot);
-}
 
 
 }
+
+// my profile recipe  query
+Stream<List<Recipe>> get myRecipesQuery {
+
+  return recipeCollection.where('userid', isEqualTo: searchKey!).snapshots().map(_recipeListFromSnapshot);
+}
+
+
+
+
+//delete document
+
+Future deleteDocument(String collectionName, String documentId) async{
+
+        DocumentReference documentReference = FirebaseFirestore.instance
+                                              .collection(collectionName)
+                                              .doc(documentId);
+
+
+        return await FirebaseFirestore.instance.runTransaction((Transaction transaction) async {
+          transaction.delete(documentReference);
+        
+            });
+
+}
+
+
+
+}
+
+
+
+
+
+
 
 
 
